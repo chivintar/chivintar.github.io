@@ -1,63 +1,268 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Welcome to My Page</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Chivintar Amenty</title>
+  <meta name="description" content="Chivintar Amenty — CV, projects, and a small visual gallery." />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Source+Serif+4:opsz@8..60&display=swap" rel="stylesheet">
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      max-width: 800px;
-      margin: 40px auto;
-      padding: 0 20px;
-      background: #fdfdfd;
-      color: #333;
+    :root {
+      --bg: #0b0b0d;
+      --bg-soft: #111115;
+      --fg: #e9e9ee;
+      --muted: #b9bbbf;
+      --brand: #7fd1ae; /* mint */
+      --brand-2: #a09bff; /* lilac */
+      --card: #15161a;
+      --shadow: 0 4px 24px rgba(0,0,0,.25);
+      --rad: 16px;
+      --maxw: 1100px;
     }
-    h1 {
-      color: #4a90e2;
+    @media (prefers-color-scheme: light) {
+      :root { --bg:#fff; --bg-soft:#f6f7fb; --fg:#111; --muted:#4d5563; --card:#fff; --shadow: 0 6px 24px rgba(0,0,0,.08); }
     }
-    ul {
-      list-style-type: none;
-      padding-left: 0;
+    *{box-sizing:border-box}
+    html,body{margin:0;padding:0;background:var(--bg);color:var(--fg);font:16px/1.55 Inter,system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Cantarell,Noto Sans,sans-serif}
+    a{color:inherit;text-decoration:none}
+    .wrap{max-width:var(--maxw);margin:auto;padding:24px}
+    header{position:sticky;top:0;background:rgba(0,0,0,.35);backdrop-filter: blur(6px);border-bottom:1px solid rgba(255,255,255,.06);z-index:10}
+    .nav{display:flex;align-items:center;gap:12px;justify-content:space-between}
+    .brand{display:flex;align-items:center;gap:10px;font-weight:800;letter-spacing:.3px}
+    .links a{padding:.5rem .75rem;border-radius:999px}
+    .links a:hover{background:rgba(255,255,255,.07)}
+    .hero{display:grid;grid-template-columns:1.1fr .9fr;gap:28px;align-items:center;padding:36px 0}
+    @media(max-width:880px){.hero{grid-template-columns:1fr}}
+    .h-title{font-size: clamp(28px, 4vw, 44px); line-height:1.1; font-weight:800; letter-spacing:-.3px}
+    .h-sub{color:var(--muted);margin-top:10px}
+    .cta{display:flex;gap:12px;margin-top:20px;flex-wrap:wrap}
+    .btn{display:inline-flex;align-items:center;gap:8px;padding:10px 14px;border-radius:12px;border:1px solid rgba(255,255,255,.12);background:var(--card);box-shadow:var(--shadow)}
+    .btn.primary{background:linear-gradient(135deg,var(--brand),var(--brand-2));color:#111;border:none}
+
+    .section{padding:26px 0}
+
+    /* Top-left quick nav */
+    .topnav{
+      position: sticky; top: 0; z-index: 5;
+      background: var(--bg);
+      padding: 8px 0 4px;
+      display: flex; gap: 10px; align-items: center;
     }
-    li {
-      margin-bottom: 10px;
-    }
-    a {
+    .topnav a{
+      color: var(--fg);
+      padding: 6px 10px;
+      border-radius: 999px;
       text-decoration: none;
-      color: #007acc;
+      border: 1px solid rgba(255,255,255,.1);
     }
-    a:hover {
-      text-decoration: underline;
-    }
-    .section {
-      margin-top: 40px;
-    }
+    .topnav a:hover{ background: rgba(255,255,255,.06); }
+    .topnav a.active{ background: rgba(255,255,255,.10); }
+
+    /* CV embed */
+    .cv-embed{position:relative;overflow:hidden;border-radius:var(--rad);border:1px solid rgba(255,255,255,.08)}
+    .cv-embed iframe{width:100%;height:70vh;border:0;background:#fff}
+    .cv-note{color:var(--muted);font-size:.95rem;margin-top:10px}
+
+    /* Gallery */
+    .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+    @media(max-width:880px){.grid{grid-template-columns:repeat(2,1fr)}}
+    @media(max-width:560px){.grid{grid-template-columns:1fr}}
+    .tile{position:relative;border-radius:14px;overflow:hidden;border:1px solid rgba(255,255,255,.08);cursor:zoom-in}
+    .tile img{display:block;width:100%;height:220px;object-fit:cover;transition:transform .35s ease}
+    .tile:hover img{transform:scale(1.03)}
+    .tile figcaption{position:absolute;left:8px;bottom:8px;background:rgba(0,0,0,.45);padding:4px 8px;border-radius:8px;font-size:.85rem}
+
+    /* Lightbox */
+    .lightbox{position:fixed;inset:0;background:rgba(0,0,0,.8);display:none;align-items:center;justify-content:center;padding:24px}
+    .lightbox.open{display:flex}
+    .lightbox img{max-width:min(1100px, 92vw);max-height:80vh;border-radius:12px}
+    .lightbox .cap{position:absolute;left:0;right:0;bottom:24px;text-align:center;color:#fff;opacity:.9}
+    .lightbox button{position:absolute;top:24px;right:24px;border:0;background:rgba(0,0,0,.5);color:#fff;padding:10px 12px;border-radius:10px;cursor:pointer}
+
+    footer{color:var(--muted);padding:36px 0}
+
+    /* Accordion (click-to-toggle tabs) */
+    details.acc{border-top:1px solid rgba(255,255,255,.08)}
+    details.acc:last-of-type{border-bottom:1px solid rgba(255,255,255,.08)}
+    details.acc > summary{list-style:none;cursor:pointer;padding:18px 6px;font-weight:700;display:flex;align-items:center;justify-content:space-between;}
+    details.acc > summary::-webkit-details-marker{display:none}
+    details.acc > summary::marker{display:none}
+    details.acc > summary .label{letter-spacing:.2px}
+    details.acc > summary .chev{transition:transform .25s ease;opacity:.85}
+    details.acc[open] > summary .chev{transform:rotate(90deg)}
+    details.acc .content{padding:0 6px 20px 6px}
+    .muted{color:var(--muted)}
   </style>
 </head>
 <body>
-  <h1> Hi, I'm Chivintar! </h1>
-  <p>Welcome to my personal page. Here you will eventually be able find my work, notes, and projects, and, while I will still be learning basic HTML until then, you can be sure it's up to date. For a little bit of poetry, check out my other page: <a href="https://kiwi.ntropy.eu" target="_blank">A Hivi in a Kiwi</a> </p>
 
-  <div class="section">
-    <h2>Documents</h2>
-    <ul>
-	<p> In the following files I am presenting an exciting paper published last year, related to Diffusion Sampling. The paper presented: <a href="https://arxiv.org/abs/2402.06121" target="_blank"> Iterated Denoising Energy Matching for Sampling from Boltzmann Densities </a> </p>
-      <li><a href="assets/GenAI_course/ChivintarAmenty/GenAI-paper-presentation_compressed.pdf" download>Download Presentation (PDF) </a></li>
-      <li><a href="assets/GenAI_course/ChivintarAmenty/GenAI-paper-presentation-2compressed.mp4" download>Download .mp4 Video</a></li>
-	  <li><a href="assets/GenAI_course/ChivintarAmenty.zip" download>Download .zip File</a></li>
-    </ul>
-  </div>
+  <main class="wrap">
+    <nav class="topnav" role="navigation" aria-label="Section tabs">
+      <a href="#cv" data-target="cv">CV</a>
+      <a href="#projects" data-target="projects">Projects</a>
+      <a href="#gallery" data-target="gallery">Gallery</a>
+      <a href="#about" data-target="about">More</a>
+    </nav>
 
-  <div class="section">
-    <h2>Notes</h2>
-    <ul>
-      <li><a href="post1.md">Post not Implemented :) </a></li>
-      <li><a href="gallery/index.html">Gallery</a></li>
-    </ul>
-  </div>
+    <section class="hero">
+      <div>
+        <h1 class="h-title">Hi, I'm Chivintar</h1>
+        <p class="h-sub">I study dynamics, causality, and generative models, and I enjoy nice visuals. My page for the moment includes a CV, few selected projects, and a tiny gallery of my creations.</p>
+        <div class="cta">
+          <a class="btn primary" href="assets/Chivintar_Amenty_CV.pdf" target="_blank" rel="noopener">Download CV (PDF)</a>
+          <a class="btn primary" href="https://kiwi.ntropy.eu/" target="_blank" rel="noopener" title="Poetry & visual notes">→ A hivi in a kiwi</a>
+          <a class="btn primary" href="https://www.linkedin.com/in/chivintar/" target="_blank" rel="noopener">→ LinkedIn</a>
+          <a class="btn primary" href="https://github.com/chivintar" target="_blank" rel="noopener">→ GitHub</a>
+        </div>
+      </div>
+    </section>
 
-  <div class="section">
-    <p style="font-size: small; color: #999;">Last updated: August 2025</p>
-  </div>
+    <section id="tabs" aria-label="Expandable sections" class="section">
+      <details class="acc" id="cv">
+        <summary><span class="label">CV</span><span class="chev">▸</span></summary>
+        <div class="content">
+          <div class="cv-embed">
+            <iframe src="assets/Chivintar_Amenty_CV.pdf" title="CV PDF preview"></iframe>
+          </div>
+          <p class="cv-note">If the embed doesn’t load, use the button above to download the PDF.</p>
+        </div>
+      </details>
+
+      <details class="acc" id="projects">
+        <summary><span class="label">Selected Projects</span><span class="chev">▸</span></summary>
+        <div class="content">
+          <div class="list">
+            <div class="item" style="padding:0">
+              <strong>Iterated Denoising Energy Matching (iDEM) — slide deck & video</strong><br/>
+              <small class="muted">Generative sampling (paper presentation)· 2024–2025</small><br/>
+              <a href="./assets/idem_presentation.pdf" target="_blank" rel="noopener">Slides (PDF)</a>
+              &nbsp;•&nbsp;
+              <a href="./assets/idem_presentation.mp4" target="_blank" rel="noopener">Talk (MP4)</a>
+              &nbsp;•&nbsp;
+              <a href="./assets/idem_materials.zip" target="_blank" rel="noopener">Code & figures (ZIP)</a>
+            </div>
+            <div class="item" style="padding:0; margin-top:10px">
+              <strong>Causal discovery in multivariate time series</strong><br/>
+              <small class="muted">PCMCI vs. Liang–Kleeman information flow · 2025</small><br/>
+              <a href="https://github.com/chivintar/causal-discovery" target="_blank" rel="noopener">GitHub repo</a>
+            </div>
+            <div class="item" style="padding:0; margin-top:10px">
+              <strong>Opinion polarization with RL agents</strong><br/>
+              <small class="muted">Network simulations & DQN agents · 2025</small><br/>
+              <a href="https://github.com/chivintar/reducing-polarization" target="_blank" rel="noopener">GitHub repo</a>
+            </div>
+          </div>
+        </div>
+      </details>
+
+      <details class="acc" id="gallery">
+        <summary><span class="label">Tiny (yet) Gallery</span><span class="chev">▸</span></summary>
+        <div class="content">
+          <div class="grid" id="grid">
+            <figure class="tile" data-cap="Glacier flows — height field study" data-full="assets/gallery/glacier-study.jpg">
+              <img src="assets/gallery/glacier-study_thumb.jpg" alt="Glacier flows — height field study"/>
+              <figcaption>Glacier flows — height field study</figcaption>
+            </figure>
+            <figure class="tile" data-cap="Sedimentation patterns — cellular automata" data-full="assets/gallery/sedimentation.jpg">
+              <img src="assets/gallery/sedimentation_thumb.jpg" alt="Sedimentation patterns — cellular automata"/>
+              <figcaption>Sedimentation patterns</figcaption>
+            </figure>
+            <figure class="tile" data-cap="Point‑cloud morphologies — GAN sketch" data-full="assets/gallery/pointcloud.jpg">
+              <img src="assets/gallery/pointcloud_thumb.jpg" alt="Point‑cloud morphologies — GAN sketch"/>
+              <figcaption>Point‑cloud morphologies</figcaption>
+            </figure>
+          </div>
+          <div class="lightbox" id="lightbox" aria-hidden="true">
+            <button id="lbClose" aria-label="Close">✕</button>
+            <img id="lbImg" alt=""/>
+            <div class="cap" id="lbCap"></div>
+          </div>
+        </div>
+      </details>
+
+      <details class="acc" id="about">
+        <summary><span class="label">More</span><span class="chev">▸</span></summary>
+        <div class="content">
+          <p style="margin:0">I work at the intersection of data, dynamics, and design. This page keeps only the essentials. For poetry and visual notes, see <a href="https://kiwi.ntropy.eu/" target="_blank" rel="noopener">A hivi in a kiwi</a>. For collaboration or materials not listed here, feel free to <a href="mailto:me@ntropy.eu">mail me</a>.</p>
+        </div>
+      </details>
+    </section>
+
+    <footer>
+      <div>Last updated: <span id="updated">September 2025</span></div>
+    </footer>
+  </main>
+
+  <script>
+    // Lightbox logic
+    const lb = document.getElementById('lightbox');
+    const lbImg = document.getElementById('lbImg');
+    const lbCap = document.getElementById('lbCap');
+    const lbClose = document.getElementById('lbClose');
+    const grid = document.getElementById('grid');
+    if(grid && lb){
+      grid.addEventListener('click', (e)=>{
+        const fig = e.target.closest('.tile');
+        if(!fig) return;
+        lbImg.src = fig.dataset.full;
+        lbImg.alt = fig.dataset.cap || '';
+        lbCap.textContent = fig.dataset.cap || '';
+        lb.classList.add('open');
+        lb.setAttribute('aria-hidden','false');
+      });
+      const closeLB = ()=>{ lb.classList.remove('open'); lb.setAttribute('aria-hidden','true'); lbImg.src=''; };
+      lb.addEventListener('click', (e)=>{ if(e.target===lb) closeLB(); });
+      lbClose.addEventListener('click', closeLB);
+    }
+
+    // --- Make top nav + header links open the matching accordion ---
+    const CLOSE_OTHERS = true;
+
+    function setActive(id){
+      document.querySelectorAll('.topnav a, header .links a').forEach(a=>{
+        const target = a.dataset.target || (a.getAttribute('href')||'').replace('#','');
+        a.classList.toggle('active', target === id);
+      });
+    }
+
+    function openAccordion(id){
+      const det = document.getElementById(id);
+      if(!det || det.tagName !== 'DETAILS') return;
+      if(CLOSE_OTHERS){
+        document.querySelectorAll('details.acc[open]').forEach(d=>{ if(d!==det) d.removeAttribute('open'); });
+      }
+      det.setAttribute('open','');
+      setActive(id);
+      det.scrollIntoView({behavior:'smooth', block:'start'});
+      // Update URL hash without jumping
+      if(history.replaceState){ history.replaceState(null, '', '#'+id); }
+    }
+
+    // Bind header nav (href="#id") and topnav (data-target or href)
+    document.querySelectorAll('header .links a[href^="#"], .topnav a').forEach(a=>{
+      a.addEventListener('click', (e)=>{
+        const href = a.getAttribute('href')||'';
+        const id = (a.dataset.target) ? a.dataset.target : (href.startsWith('#')? href.slice(1): null);
+        if(!id) return; // allow normal link
+        const det = document.getElementById(id);
+        if(det && det.tagName === 'DETAILS'){
+          e.preventDefault();
+          // Toggle if already open and CLOSE_OTHERS is false; otherwise just open
+          if(!CLOSE_OTHERS && det.hasAttribute('open')){
+            det.removeAttribute('open');
+            setActive('');
+          } else {
+            openAccordion(id);
+          }
+        }
+      });
+    });
+
+    // Last‑updated stamp (keep text consistent)
+    const updated = document.getElementById('updated');
+    if(updated){ updated.textContent = 'September 2025'; }
+  </script>
 </body>
 </html>
