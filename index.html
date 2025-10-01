@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -9,7 +9,10 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Source+Serif+4:opsz@8..60&display=swap" rel="stylesheet">
   <style>
-    :root {
+    /* =====================
+       THEME & TOKENS
+       ===================== */
+    :root{
       --bg: #0b0b0d;
       --bg-soft: #111115;
       --fg: #e9e9ee;
@@ -20,48 +23,56 @@
       --shadow: 0 4px 24px rgba(0,0,0,.25);
       --rad: 16px;
       --maxw: 1100px;
+      --border: 1px solid rgba(255,255,255,.10);
+      --border-softer: 1px solid rgba(255,255,255,.08);
     }
-    @media (prefers-color-scheme: light) {
-      :root { --bg:#fff; --bg-soft:#f6f7fb; --fg:#111; --muted:#4d5563; --card:#fff; --shadow: 0 6px 24px rgba(0,0,0,.08); }
+    /* Light theme overrides (explicit) */
+    html[data-theme="light"]:root{
+      --bg:#ffffff; --bg-soft:#f6f7fb; --fg:#111111; --muted:#4d5563; --card:#ffffff; --shadow: 0 6px 24px rgba(0,0,0,.08);
+      --border: 1px solid rgba(0,0,0,.08); --border-softer: 1px solid rgba(0,0,0,.06);
     }
+    /* Dark theme overrides (explicit) */
+    html[data-theme="dark"]:root{ /* uses defaults above */ }
+    /* Auto: follow OS preference unless user set explicit */
+    @media (prefers-color-scheme: light){
+      html[data-theme="auto"]:root{ --bg:#ffffff; --bg-soft:#f6f7fb; --fg:#111111; --muted:#4d5563; --card:#ffffff; --shadow: 0 6px 24px rgba(0,0,0,.08); --border: 1px solid rgba(0,0,0,.08); --border-softer: 1px solid rgba(0,0,0,.06); }
+    }
+
     *{box-sizing:border-box}
     html,body{margin:0;padding:0;background:var(--bg);color:var(--fg);font:16px/1.55 Inter,system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Cantarell,Noto Sans,sans-serif}
     a{color:inherit;text-decoration:none}
     .wrap{max-width:var(--maxw);margin:auto;padding:24px}
-    header{position:sticky;top:0;background:rgba(0,0,0,.35);backdrop-filter: blur(6px);border-bottom:1px solid rgba(255,255,255,.06);z-index:10}
-    .nav{display:flex;align-items:center;gap:12px;justify-content:space-between}
-    .brand{display:flex;align-items:center;gap:10px;font-weight:800;letter-spacing:.3px}
-    .links a{padding:.5rem .75rem;border-radius:999px}
-    .links a:hover{background:rgba(255,255,255,.07)}
-    .hero{display:grid;grid-template-columns:1.1fr .9fr;gap:28px;align-items:center;padding:36px 0}
-    @media(max-width:880px){.hero{grid-template-columns:1fr}}
+
+    /* Sticky utility nav */
+    .topnav{ position: sticky; top: 0; z-index: 5; background: color-mix(in oklab, var(--bg), transparent 0%); backdrop-filter: blur(6px); padding: 8px 0 6px; display: grid; grid-template-columns: 1fr auto; align-items: center; gap: 8px; }
+    .topnav .tabs{ display:flex; gap:10px; align-items:center; }
+    .topnav a{ padding: 6px 10px; border-radius: 999px; border: var(--border); }
+    .topnav a:hover{ background: color-mix(in oklab, var(--fg), transparent 90%); }
+    .topnav a.active{ background: color-mix(in oklab, var(--fg), transparent 85%); }
+
+    /* Theme toggle (single icon button) */
+    .theme-switch{ display:flex; align-items:center; }
+    .theme-toggle{ border: var(--border); background: transparent; color: var(--fg); border-radius: 999px; padding: 6px 10px; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; }
+    .theme-toggle svg{ width:16px; height:16px; opacity:.95 }
+    .theme-toggle:focus-visible{ outline:2px solid color-mix(in oklab, var(--fg), transparent 70%); outline-offset:2px }
+
+    /* HERO (single column) */
+    .hero{ padding: 36px 0 8px; }
+    .hero-inner{ max-width: 70ch; }
     .h-title{font-size: clamp(28px, 4vw, 44px); line-height:1.1; font-weight:800; letter-spacing:-.3px}
     .h-sub{color:var(--muted);margin-top:10px}
-    .cta{display:flex;gap:12px;margin-top:20px;flex-wrap:wrap}
-    .btn{display:inline-flex;align-items:center;gap:8px;padding:10px 14px;border-radius:12px;border:1px solid rgba(255,255,255,.12);background:var(--card);box-shadow:var(--shadow)}
-    .btn.primary{background:linear-gradient(135deg,var(--brand),var(--brand-2));color:#111;border:none}
+
+    /* Buttons with icons */
+    .cta{ display:flex; flex-wrap:wrap; gap:10px; margin-top:18px }
+    .btn{ display:inline-flex; align-items:center; gap:8px; padding:10px 14px; border-radius:12px; border: var(--border); background: var(--card); box-shadow: var(--shadow); font-weight:600; }
+    .btn svg{ width:18px; height:18px; }
+    .btn.primary{ background:linear-gradient(135deg,var(--brand),var(--brand-2)); color:#111; border:none }
+    .btn.ghost{ background: transparent; }
 
     .section{padding:26px 0}
 
-    /* Top-left quick nav */
-    .topnav{
-      position: sticky; top: 0; z-index: 5;
-      background: var(--bg);
-      padding: 8px 0 4px;
-      display: flex; gap: 10px; align-items: center;
-    }
-    .topnav a{
-      color: var(--fg);
-      padding: 6px 10px;
-      border-radius: 999px;
-      text-decoration: none;
-      border: 1px solid rgba(255,255,255,.1);
-    }
-    .topnav a:hover{ background: rgba(255,255,255,.06); }
-    .topnav a.active{ background: rgba(255,255,255,.10); }
-
     /* CV embed */
-    .cv-embed{position:relative;overflow:hidden;border-radius:var(--rad);border:1px solid rgba(255,255,255,.08)}
+    .cv-embed{position:relative;overflow:hidden;border-radius:var(--rad);border:var(--border-softer);background: var(--card)}
     .cv-embed iframe{width:100%;height:70vh;border:0;background:#fff}
     .cv-note{color:var(--muted);font-size:.95rem;margin-top:10px}
 
@@ -69,7 +80,7 @@
     .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
     @media(max-width:880px){.grid{grid-template-columns:repeat(2,1fr)}}
     @media(max-width:560px){.grid{grid-template-columns:1fr}}
-    .tile{position:relative;border-radius:14px;overflow:hidden;border:1px solid rgba(255,255,255,.08);cursor:zoom-in}
+    .tile{position:relative;border-radius:14px;overflow:hidden;border:var(--border-softer);cursor:zoom-in}
     .tile img{display:block;width:100%;height:220px;object-fit:cover;transition:transform .35s ease}
     .tile:hover img{transform:scale(1.03)}
     .tile figcaption{position:absolute;left:8px;bottom:8px;background:rgba(0,0,0,.45);padding:4px 8px;border-radius:8px;font-size:.85rem}
@@ -84,8 +95,8 @@
     footer{color:var(--muted);padding:36px 0}
 
     /* Accordion (click-to-toggle tabs) */
-    details.acc{border-top:1px solid rgba(255,255,255,.08)}
-    details.acc:last-of-type{border-bottom:1px solid rgba(255,255,255,.08)}
+    details.acc{border-top:var(--border-softer)}
+    details.acc:last-of-type{border-bottom:var(--border-softer)}
     details.acc > summary{list-style:none;cursor:pointer;padding:18px 6px;font-weight:700;display:flex;align-items:center;justify-content:space-between;}
     details.acc > summary::-webkit-details-marker{display:none}
     details.acc > summary::marker{display:none}
@@ -100,35 +111,41 @@
 
   <main class="wrap">
     <nav class="topnav" role="navigation" aria-label="Section tabs">
-      <a href="#cv" data-target="cv">CV</a>
-      <a href="#projects" data-target="projects">Projects</a>
-      <a href="#gallery" data-target="gallery">Gallery</a>
-      <a href="#about" data-target="about">More</a>
+      <div class="tabs">
+        <a href="#cv" data-target="cv">CV</a>
+        <a href="#projects" data-target="projects">Projects</a>
+        <a href="#gallery" data-target="gallery">Gallery</a>
+        <a href="#about" data-target="about">More</a>
+      </div>
+      <div class="theme-switch" aria-label="Color theme">
+        <button id="theme-toggle" class="theme-toggle" type="button" title="Toggle theme" aria-label="Toggle theme"></button>
+      </div>
     </nav>
 
     <section class="hero">
-      <div>
+      <div class="hero-inner">
         <h1 class="h-title">Hi, I'm Chivintar</h1>
         <p class="h-sub">I study dynamics, causality, and generative models, and I enjoy nice visuals. My page for the moment includes a CV, few selected projects, and a tiny gallery of my creations.</p>
-        <div class="cta">
-          <a class="btn primary" href="assets/Chivintar_Amenty_CV.pdf" target="_blank" rel="noopener">Download CV (PDF)</a>
-          <a class="btn primary" href="https://kiwi.ntropy.eu/" target="_blank" rel="noopener" title="Poetry & visual notes">→ A hivi in a kiwi</a>
-          <a class="btn primary" href="https://www.linkedin.com/in/chivintar/" target="_blank" rel="noopener">→ LinkedIn</a>
-          <a class="btn primary" href="https://github.com/chivintar" target="_blank" rel="noopener">→ GitHub</a>
+        <div class="cta" role="group" aria-label="Primary links">
+
+
+          <a class="btn ghost" href="https://github.com/chivintar" target="_blank" rel="noopener">
+            <!-- GitHub icon -->
+            <svg viewBox="0 0 24 24" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><path fill="currentColor" d="M12 .5a12 12 0 0 0-3.79 23.39c.6.11.82-.26.82-.58v-2.18c-3.34.73-4.04-1.61-4.04-1.61-.55-1.38-1.34-1.75-1.34-1.75-1.09-.74.08-.73.08-.73 1.2.08 1.84 1.24 1.84 1.24 1.07 1.83 2.8 1.3 3.48.99.11-.78.42-1.3.76-1.6-2.66-.3-5.47-1.33-5.47-5.93 0-1.31.47-2.38 1.24-3.22-.12-.3-.54-1.52.12-3.17 0 0 1-.32 3.3 1.23a11.4 11.4 0 0 1 6 0c2.29-1.55 3.29-1.23 3.29-1.23.66 1.65.24 2.87.12 3.17.77.84 1.24 1.91 1.24 3.22 0 4.61-2.81 5.63-5.48 5.93.43.37.81 1.1.81 2.22v3.29c0 .32.22.69.82.58A12 12 0 0 0 12 .5z"/></svg>
+            
+          </a>		  
+          <a class="btn ghost" href="https://www.linkedin.com/in/chivintar/" target="_blank" rel="noopener">
+            <!-- LinkedIn icon -->
+            <svg viewBox="0 0 24 24" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><path fill="currentColor" d="M4.98 3.5C4.98 4.88 3.86 6 2.5 6S0 4.88 0 3.5 1.12 1 2.5 1 4.98 2.12 4.98 3.5zM0 8h5v16H0V8zm7.5 0h4.8v2.2h.07c.67-1.2 2.3-2.46 4.73-2.46 5.06 0 6 3.33 6 7.66V24h-5v-7.6c0-1.82-.03-4.15-2.53-4.15-2.54 0-2.93 1.98-2.93 4.02V24h-5V8z"/></svg>
+            
+          </a>
+
         </div>
       </div>
     </section>
 
     <section id="tabs" aria-label="Expandable sections" class="section">
-      <details class="acc" id="cv">
-        <summary><span class="label">CV</span><span class="chev">▸</span></summary>
-        <div class="content">
-          <div class="cv-embed">
-            <iframe src="assets/Chivintar_Amenty_CV.pdf" title="CV PDF preview"></iframe>
-          </div>
-          <p class="cv-note">If the embed doesn’t load, use the button above to download the PDF.</p>
-        </div>
-      </details>
+
 
       <details class="acc" id="projects">
         <summary><span class="label">Selected Projects</span><span class="chev">▸</span></summary>
@@ -181,11 +198,38 @@
           </div>
         </div>
       </details>
-
+      <details class="acc" id="cv">
+        <summary><span class="label">CV</span><span class="chev">▸</span></summary>
+		<div class="cta" role="group" aria-label="Primary links">
+			<a class="btn primary" href="assets/Chivintar_Amenty_CV.pdf" target="_blank" rel="noopener">
+            <!-- download icon -->
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            CV
+          </a>
+		 </div>
+        <div class="content">
+          <div class="cv-embed">
+            <iframe src="assets/Chivintar_Amenty_CV.pdf" title="CV PDF preview"></iframe>
+          </div>
+          <p class="cv-note">If the embed doesn’t load, use the button above to download the PDF.</p>
+        </div>
+      </details>
       <details class="acc" id="about">
         <summary><span class="label">More</span><span class="chev">▸</span></summary>
         <div class="content">
           <p style="margin:0">I work at the intersection of data, dynamics, and design. This page keeps only the essentials. For poetry and visual notes, see <a href="https://kiwi.ntropy.eu/" target="_blank" rel="noopener">A hivi in a kiwi</a>. For collaboration or materials not listed here, feel free to <a href="mailto:me@ntropy.eu">mail me</a>.</p>
+          <p style="margin-top:12px"><a class="btn ghost" href="https://open.spotify.com/artist/3Rnab37Gi8YZehnDukZo5w" target="_blank" rel="noopener" title="Spotify">
+            <!-- Spotify icon -->
+            <svg viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.6 0 12 0zm5.5 17.4c-.2.4-.6.6-1 .3-2.8-1.7-6.3-2.1-10.4-1.2-.5.1-.8-.2-.9-.6-.1-.5.2-.8.6-.9 4.5-1 8.4-.6 11.6 1.3.4.2.5.7.1 1.1zm1.4-3.1c-.3.5-.8.7-1.3.4-3.2-1.9-8.1-2.5-11.9-1.4-.6.2-1.1-.2-1.3-.7-.2-.6.2-1.1.7-1.3 4.3-1.3 9.7-.7 13.4 1.6.5.2.6.9.4 1.4zm.1-3.3C15.4 8.8 8.9 8.6 5.4 9.6c-.7.2-1.4-.2-1.6-.9-.2-.7.2-1.4.9-1.6 4-1.2 11.2-1 15.6 1.9.6.3.8 1.1.4 1.7-.3.5-1 .7-1.5.4z"/></svg>
+            Spotify
+          </a>
+		   <a class="btn ghost" href="https://kiwi.ntropy.eu/" target="_blank" rel="noopener" title="Poetry & visual notes">
+            <!-- globe icon -->
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+            A hivi in a kiwi
+          </a></p>
+		  
+		  
         </div>
       </details>
     </section>
@@ -196,7 +240,41 @@
   </main>
 
   <script>
-    // Lightbox logic
+    // ---------- Theme handling (single toggle) ----------
+    (function(){
+      const root = document.documentElement;
+      const btn = document.getElementById('theme-toggle');
+      const STORAGE_KEY = 'theme'; // 'light' | 'dark'
+
+      const icons = {
+        sun: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M4 12H2m20 0h-2M5 5l1.5 1.5M17.5 17.5 19 19M19 5l-1.5 1.5M5 19l1.5-1.5"/></svg>',
+        moon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>'
+      };
+
+      function setTheme(mode){
+        root.setAttribute('data-theme', mode);
+        localStorage.setItem(STORAGE_KEY, mode);
+        renderIcon(mode);
+      }
+      function renderIcon(mode){
+        // Show moon when in dark mode; sun when in light mode
+        btn.innerHTML = mode === 'dark' ? icons.moon : icons.sun;
+        btn.setAttribute('aria-pressed', mode === 'dark' ? 'true' : 'false');
+        btn.setAttribute('title', mode === 'dark' ? 'Switch to light theme' : 'Switch to dark theme');
+      }
+
+      // initial theme: saved -> system preference -> dark
+      const saved = localStorage.getItem(STORAGE_KEY);
+      let initial = saved === 'light' || saved === 'dark' ? saved : (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');
+      setTheme(initial);
+
+      btn.addEventListener('click', ()=>{
+        const next = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+        setTheme(next);
+      });
+    })();
+
+    // ---------- Lightbox logic ----------
     const lb = document.getElementById('lightbox');
     const lbImg = document.getElementById('lbImg');
     const lbCap = document.getElementById('lbCap');
@@ -215,18 +293,17 @@
       const closeLB = ()=>{ lb.classList.remove('open'); lb.setAttribute('aria-hidden','true'); lbImg.src=''; };
       lb.addEventListener('click', (e)=>{ if(e.target===lb) closeLB(); });
       lbClose.addEventListener('click', closeLB);
+      window.addEventListener('keydown', (e)=>{ if(e.key==='Escape' && lb.classList.contains('open')) closeLB(); });
     }
 
-    // --- Make top nav + header links open the matching accordion ---
+    // ---------- Tabs toggle via topnav ----------
     const CLOSE_OTHERS = true;
-
     function setActive(id){
-      document.querySelectorAll('.topnav a, header .links a').forEach(a=>{
+      document.querySelectorAll('.topnav a').forEach(a=>{
         const target = a.dataset.target || (a.getAttribute('href')||'').replace('#','');
         a.classList.toggle('active', target === id);
       });
     }
-
     function openAccordion(id){
       const det = document.getElementById(id);
       if(!det || det.tagName !== 'DETAILS') return;
@@ -236,20 +313,16 @@
       det.setAttribute('open','');
       setActive(id);
       det.scrollIntoView({behavior:'smooth', block:'start'});
-      // Update URL hash without jumping
       if(history.replaceState){ history.replaceState(null, '', '#'+id); }
     }
-
-    // Bind header nav (href="#id") and topnav (data-target or href)
-    document.querySelectorAll('header .links a[href^="#"], .topnav a').forEach(a=>{
+    document.querySelectorAll('.topnav a').forEach(a=>{
       a.addEventListener('click', (e)=>{
         const href = a.getAttribute('href')||'';
         const id = (a.dataset.target) ? a.dataset.target : (href.startsWith('#')? href.slice(1): null);
-        if(!id) return; // allow normal link
+        if(!id) return;
         const det = document.getElementById(id);
         if(det && det.tagName === 'DETAILS'){
           e.preventDefault();
-          // Toggle if already open and CLOSE_OTHERS is false; otherwise just open
           if(!CLOSE_OTHERS && det.hasAttribute('open')){
             det.removeAttribute('open');
             setActive('');
@@ -260,7 +333,7 @@
       });
     });
 
-    // Last‑updated stamp (keep text consistent)
+    // ---------- Last‑updated stamp ----------
     const updated = document.getElementById('updated');
     if(updated){ updated.textContent = 'September 2025'; }
   </script>
